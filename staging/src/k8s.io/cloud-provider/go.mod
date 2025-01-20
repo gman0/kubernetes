@@ -59,8 +59,8 @@ require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/kcp-dev/apimachinery/v2 v2.0.1-0.20240817110845-a9eb9752bfeb // indirect
-	github.com/kcp-dev/client-go v0.0.0-20240903163341-318c14d7636e // indirect
+	github.com/kcp-dev/apimachinery/v2 v2.0.0-20250120141858-75599979cb4e // indirect
+	github.com/kcp-dev/client-go v0.0.0-20250120145245-f4953d0d6483 // indirect
 	github.com/kcp-dev/logicalcluster/v3 v3.0.5 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/moby/term v0.5.0 // indirect
@@ -125,3 +125,7 @@ replace (
 	k8s.io/controller-manager => ../controller-manager
 	k8s.io/kms => ../kms
 )
+
+replace github.com/kcp-dev/apimachinery/v2 => github.com/gman0/kcp-apimachinery/v2 v2.0.0-20250120141858-75599979cb4e
+
+replace github.com/kcp-dev/client-go => github.com/gman0/kcp-client-go v0.0.0-20250120145245-f4953d0d6483
