@@ -25,8 +25,8 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/websocket v1.5.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
-	github.com/kcp-dev/apimachinery/v2 v2.0.1-0.20240817110845-a9eb9752bfeb
-	github.com/kcp-dev/client-go v0.0.0-20240903163341-318c14d7636e
+	github.com/kcp-dev/apimachinery/v2 v2.0.0-20250120141858-75599979cb4e
+	github.com/kcp-dev/client-go v0.0.0-20250120145245-f4953d0d6483
 	github.com/kcp-dev/logicalcluster/v3 v3.0.5
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822
 	github.com/mxk/go-flowrate v0.0.0-20140419014527-cca7078d478f
@@ -137,3 +137,7 @@ replace (
 	k8s.io/component-base => ../component-base
 	k8s.io/kms => ../kms
 )
+
+replace github.com/kcp-dev/apimachinery/v2 => github.com/gman0/kcp-apimachinery/v2 v2.0.0-20250120141858-75599979cb4e
+
+replace github.com/kcp-dev/client-go => github.com/gman0/kcp-client-go v0.0.0-20250120145245-f4953d0d6483
