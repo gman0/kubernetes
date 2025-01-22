@@ -751,14 +751,10 @@ func (s *store) GetList(ctx context.Context, key string, opts storage.ListOption
 		return err
 	}
 
-	if withRev != 0 {
-		options = append(options, clientv3.WithRev(withRev))
-	}
-
 	// kcp
 	cluster, err := endpointsrequest.ValidClusterFrom(ctx)
 	if err != nil {
-		return storage.NewInternalErrorf("unable to get cluster for list key %q: %v", keyPrefix, err)
+		return storage.NewInternalError(fmt.Errorf("unable to get cluster for list key %q: %v", keyPrefix, err))
 	}
 	shard := endpointsrequest.ShardFrom(ctx)
 	crdIndicator := kcp.CustomResourceIndicatorFrom(ctx)
