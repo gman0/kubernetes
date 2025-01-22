@@ -435,14 +435,7 @@ func (s *store) conditionalDelete(
 		}
 
 		if !skipTransformDecode {
-			if len(txnResp.Responses) == 0 || txnResp.Responses[0].GetResponseDeleteRange() == nil {
-				return errors.New(fmt.Sprintf("invalid DeleteRange response: %v", txnResp.Responses))
-			}
-			deleteResp := txnResp.Responses[0].GetResponseDeleteRange()
-			if deleteResp.Header == nil {
-				return errors.New("invalid DeleteRange response - nil header")
-			}
-			err = decode(s.codec, s.versioner, origState.data, out, deleteResp.Header.Revision, clusterName, shardName)
+			err = decode(s.codec, s.versioner, origState.data, out, txnResp.Revision, clusterName, shardName)
 			if err != nil {
 				recordDecodeError(s.groupResourceString, key)
 				return err
