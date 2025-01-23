@@ -398,7 +398,9 @@ func (e *TokensController) ensureReferencedToken(serviceAccount *v1.ServiceAccou
 	}
 
 	// Generate the token
-	token, err := e.token.GenerateToken(serviceaccount.LegacyClaims(*serviceAccount, *secret))
+	c, pc := serviceaccount.LegacyClaims(*serviceAccount, *secret)
+	// TODO: need to plumb context if using external signer ever becomes a posibility.
+	token, err := e.token.GenerateToken(context.TODO(), c, pc)
 	if err != nil {
 		// retriable error
 		return true, err
