@@ -108,7 +108,7 @@ func NewPlugin(_ io.Reader) *Plugin {
 					f.Admissionregistration().V1().ValidatingAdmissionPolicyBindings().Informer(),
 					NewValidatingAdmissionPolicyAccessor,
 					NewValidatingAdmissionPolicyBindingAccessor,
-					CompilePolicy,
+					compilePolicy,
 					nil, // TODO(embik): this was done in accordance with d0a7ccbaac22d32f219b4a2c4944e72e507c3d14.
 					dynamicClient,
 					restMapper,
