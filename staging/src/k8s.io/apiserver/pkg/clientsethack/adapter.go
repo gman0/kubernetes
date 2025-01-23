@@ -45,6 +45,7 @@ import (
 	certificatesv1alpha1 "k8s.io/client-go/kubernetes/typed/certificates/v1alpha1"
 	certificatesv1beta1 "k8s.io/client-go/kubernetes/typed/certificates/v1beta1"
 	coordinationv1 "k8s.io/client-go/kubernetes/typed/coordination/v1"
+	coordinationv1alpha2 "k8s.io/client-go/kubernetes/typed/coordination/v1alpha2"
 	coordinationv1beta1 "k8s.io/client-go/kubernetes/typed/coordination/v1beta1"
 	corev1 "k8s.io/client-go/kubernetes/typed/core/v1"
 	discoveryv1 "k8s.io/client-go/kubernetes/typed/discovery/v1"
@@ -190,6 +191,10 @@ func (h *hack) CertificatesV1alpha1() certificatesv1alpha1.CertificatesV1alpha1I
 }
 
 func (h *hack) CertificatesV1beta1() certificatesv1beta1.CertificatesV1beta1Interface {
+	panic("programmer error: using a cluster-unaware clientset, need to cast this to use the cluster-aware one!")
+}
+
+func (h *hack) CoordinationV1alpha2() coordinationv1alpha2.CoordinationV1alpha2Interface {
 	panic("programmer error: using a cluster-unaware clientset, need to cast this to use the cluster-aware one!")
 }
 
