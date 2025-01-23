@@ -102,6 +102,13 @@ limitations under the License.
 */
 
 package garbagecollector
+
+// kcp: we diverge from upstream's garbagecollector.Sync to make kcp's GC
+// workspace-aware. Instead of running the sync every <period> (30s) (see the
+// wait.UntilWithContext call in the original garbagecollector.Sync), we call
+// ResyncMonitors on demand, invoked by kcp's GC controller that generates an
+// event for each Add/Update/Delete of a LogicalCluster.
+// See kcp-dev/kcp/pkg/garbagecollector/garbagecollector_controller.go.
 `)
 
 	// Finally, print the line range we need
