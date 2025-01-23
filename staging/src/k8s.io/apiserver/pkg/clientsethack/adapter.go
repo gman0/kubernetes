@@ -69,6 +69,7 @@ import (
 	rbacv1alpha1 "k8s.io/client-go/kubernetes/typed/rbac/v1alpha1"
 	rbacv1beta1 "k8s.io/client-go/kubernetes/typed/rbac/v1beta1"
 	resourcev1alpha3 "k8s.io/client-go/kubernetes/typed/resource/v1alpha3"
+	resourcev1beta1 "k8s.io/client-go/kubernetes/typed/resource/v1beta1"
 	schedulingv1 "k8s.io/client-go/kubernetes/typed/scheduling/v1"
 	schedulingv1alpha1 "k8s.io/client-go/kubernetes/typed/scheduling/v1alpha1"
 	schedulingv1beta1 "k8s.io/client-go/kubernetes/typed/scheduling/v1beta1"
@@ -115,6 +116,10 @@ func (h *hack) NetworkingV1alpha1() networkingv1alpha1.NetworkingV1alpha1Interfa
 }
 
 func (h *hack) ResourceV1alpha3() resourcev1alpha3.ResourceV1alpha3Interface {
+	panic("programmer error: using a cluster-unaware clientset, need to cast this to use the cluster-aware one!")
+}
+
+func (h *hack) ResourceV1beta1() resourcev1beta1.ResourceV1beta1Interface {
 	panic("programmer error: using a cluster-unaware clientset, need to cast this to use the cluster-aware one!")
 }
 
