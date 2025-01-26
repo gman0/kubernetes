@@ -43,10 +43,12 @@ func (rq *Controller) UpdateMonitors(ctx context.Context, discoveryFunc Namespac
 		if err != nil {
 			utilruntime.HandleError(err)
 
-			if discovery.IsGroupDiscoveryFailedError(err) && len(newResources) > 0 {
-				// In partial discovery cases, don't remove any existing informers, just add new ones
+			if groupLookupFailures, isLookupFailure := discovery.GroupDiscoveryFailedErrorGroups(err); isLookupFailure && len(newResources) > 0 {
+				// In partial discovery cases, preserve existing informers for resources in the failed groups, so resyncMonitors will only add informers for newly seen resources
 				for k, v := range oldResources {
-					newResources[k] = v
+					if _, failed := groupLookupFailures[k.GroupVersion()]; failed {
+						newResources[k] = v
+					}
 				}
 			} else {
 				// short circuit in non-discovery error cases or if discovery returned zero resources
@@ -56,7 +58,7 @@ func (rq *Controller) UpdateMonitors(ctx context.Context, discoveryFunc Namespac
 
 		// Decide whether discovery has reported a change.
 		if reflect.DeepEqual(oldResources, newResources) {
-			logger.V(8).Info("no resource updates from discovery, skipping resource quota sync")
+			logger.V(4).Info("no resource updates from discovery, skipping resource quota sync")
 			return
 		}
 
@@ -75,6 +77,10 @@ func (rq *Controller) UpdateMonitors(ctx context.Context, discoveryFunc Namespac
 			utilruntime.HandleError(fmt.Errorf("failed to sync resource monitors: %v", err))
 			return
 		}
+
+		// at this point, we've synced the new resources to our monitors, so record that fact.
+		oldResources = newResources
+
 		// wait for caches to fill for a while (our sync period).
 		// this protects us from deadlocks where available resources changed and one of our informer caches will never fill.
 		// informers keep attempting to sync in the background, so retrying doesn't interrupt them.
@@ -89,8 +95,6 @@ func (rq *Controller) UpdateMonitors(ctx context.Context, discoveryFunc Namespac
 			return
 		}
 
-		// success, remember newly synced resources
-		oldResources = newResources
 		logger.V(2).Info("synced quota controller")
 	}()
 
