@@ -6,9 +6,9 @@ go 1.22.0
 
 require (
 	github.com/google/go-cmp v0.6.0
-	k8s.io/api v0.0.0
-	k8s.io/apimachinery v0.0.0
-	k8s.io/component-base v0.0.0
+	k8s.io/api v0.31.0
+	k8s.io/apimachinery v0.31.0
+	k8s.io/component-base v0.31.0
 	sigs.k8s.io/yaml v1.4.0
 )
 
@@ -18,9 +18,7 @@ require (
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/kcp-dev/apimachinery/v2 v2.0.1-0.20240817110845-a9eb9752bfeb
-	github.com/kcp-dev/client-go v0.0.0-20240903163341-318c14d7636e
-	github.com/kcp-dev/logicalcluster/v3 v3.0.5
+	github.com/kr/text v0.2.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
