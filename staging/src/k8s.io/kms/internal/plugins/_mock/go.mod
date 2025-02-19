@@ -23,3 +23,5 @@ require (
 replace k8s.io/kms => ../../../../kms
 
 replace github.com/kcp-dev/apimachinery/v2 => github.com/gman0/kcp-apimachinery/v2 v2.0.0-20250219125338-ff016394a901
+
+replace github.com/kcp-dev/client-go => github.com/gman0/kcp-client-go v0.0.0-20250219141203-f47090154678
