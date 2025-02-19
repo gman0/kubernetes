@@ -19,9 +19,6 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
-	github.com/kcp-dev/apimachinery/v2 v2.0.0-20250219125338-ff016394a901
-	github.com/kcp-dev/client-go v0.0.0-20250219141203-f47090154678
-	github.com/kcp-dev/logicalcluster/v3 v3.0.5
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/opencontainers/runtime-spec v1.0.3-0.20220909204839-494a5a6aca78 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
@@ -32,7 +29,3 @@ require (
 )
 
 replace k8s.io/mount-utils => ../mount-utils
-
-replace github.com/kcp-dev/apimachinery/v2 => github.com/gman0/kcp-apimachinery/v2 v2.0.0-20250219125338-ff016394a901
-
-replace github.com/kcp-dev/client-go => github.com/gman0/kcp-client-go v0.0.0-20250219141203-f47090154678
