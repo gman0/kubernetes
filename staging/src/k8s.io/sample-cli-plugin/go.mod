@@ -35,7 +35,6 @@ require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/kcp-dev/client-go v0.0.0-20250221220004-0f10027b3c06
 	github.com/liggitt/tabwriter v0.0.0-20181228230101-89fcab3d43de // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/moby/term v0.5.0 // indirect
@@ -80,5 +79,3 @@ replace (
 	k8s.io/client-go => ../client-go
 	k8s.io/sample-cli-plugin => ../sample-cli-plugin
 )
-
-replace github.com/kcp-dev/client-go => github.com/gman0/kcp-client-go v0.0.0-20250221220004-0f10027b3c06
