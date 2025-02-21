@@ -48,6 +48,7 @@ require (
 	github.com/google/pprof v0.0.0-20240525223248-4bfdf5a9a2af // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
+	github.com/kcp-dev/client-go v0.0.0-20250221220004-0f10027b3c06
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/moby/spdystream v0.4.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
@@ -71,3 +72,5 @@ replace (
 	k8s.io/apimachinery => ../apimachinery
 	k8s.io/client-go => ../client-go
 )
+
+replace github.com/kcp-dev/client-go => github.com/gman0/kcp-client-go v0.0.0-20250221220004-0f10027b3c06
