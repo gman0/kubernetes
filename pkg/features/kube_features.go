@@ -875,6 +875,13 @@ const (
 	//
 	// Enables specifying resources at pod-level.
 	PodLevelResources featuregate.Feature = "PodLevelResources"
+
+	// TODO(cnvergence): Remove when not applicable
+	// owner: @cnvergence
+	// alpha: v1.31
+	//
+	// GlobalServiceAccount is a feature gate that enables the cross-workspace service accounts feature.
+	GlobalServiceAccount featuregate.Feature = "GlobalServiceAccount"
 )
 
 func init() {
@@ -897,4 +904,4 @@ func init() {
 //
 // Entries are separated from each other with blank lines to avoid sweeping gofmt changes
 // when adding or removing one entry.
-var defaultKubernetesFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{}
+var defaultKubernetesFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
