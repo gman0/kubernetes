@@ -57,3 +57,5 @@ replace (
 	k8s.io/apimachinery => ../../apimachinery
 	k8s.io/client-go => ../../client-go
 )
+
+replace github.com/kcp-dev/client-go => github.com/gman0/kcp-client-go v0.0.0-20250418091538-395a6a497c3c

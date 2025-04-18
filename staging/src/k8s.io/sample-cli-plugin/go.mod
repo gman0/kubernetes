@@ -39,6 +39,7 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kcp-dev/apimachinery/v2 v2.0.1-0.20250417112016-c9dbad5dea88
+	github.com/kcp-dev/client-go v0.0.0-20250418091538-395a6a497c3c
 	github.com/kcp-dev/logicalcluster/v3 v3.0.5
 	github.com/liggitt/tabwriter v0.0.0-20181228230101-89fcab3d43de // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
@@ -80,3 +81,5 @@ replace (
 	k8s.io/cli-runtime => ../cli-runtime
 	k8s.io/client-go => ../client-go
 )
+
+replace github.com/kcp-dev/client-go => github.com/gman0/kcp-client-go v0.0.0-20250418091538-395a6a497c3c
