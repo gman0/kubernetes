@@ -15,6 +15,8 @@ require (
 )
 
 require (
+	github.com/kcp-dev/apimachinery/v2 v2.0.1-0.20250417112016-c9dbad5dea88
+	github.com/kcp-dev/logicalcluster/v3 v3.0.5
 	golang.org/x/net v0.30.0 // indirect
 	golang.org/x/sys v0.26.0 // indirect
 	golang.org/x/text v0.19.0 // indirect
