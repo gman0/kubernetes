@@ -904,4 +904,4 @@ func init() {
 //
 // Entries are separated from each other with blank lines to avoid sweeping gofmt changes
 // when adding or removing one entry.
-var defaultKubernetesFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{
+var defaultKubernetesFeatureGates = map[featuregate.Feature]featuregate.FeatureSpec{}
