@@ -37,8 +37,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 	utilfeature "k8s.io/apiserver/pkg/util/feature"
 	"k8s.io/client-go/discovery"
-	v1clientset "k8s.io/client-go/kubernetes/typed/core/v1"
-	"k8s.io/client-go/metadata"
 	"k8s.io/kubernetes/pkg/features"
 )
 
@@ -573,7 +571,7 @@ func (d *namespacedResourcesDeleter) deleteAllContent(ctx context.Context, ns *v
 	podsGVR := schema.GroupVersionResource{Group: "", Version: "v1", Resource: "pods"}
 	if _, hasPods := groupVersionResources[podsGVR]; hasPods && utilfeature.DefaultFeatureGate.Enabled(features.OrderedNamespaceDeletion) {
 		// Ensure all pods in the namespace are deleted first
-		gvrDeletionMetadata, err := d.deleteAllContentForGroupVersionResource(ctx, podsGVR, namespace, namespaceDeletedAt)
+		gvrDeletionMetadata, err := d.deleteAllContentForGroupVersionResource(ctx, logicalcluster.From(ns), podsGVR, namespace, namespaceDeletedAt)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("failed to delete pods for namespace: %s, err: %w", namespace, err))
 			conditionUpdater.ProcessDeleteContentErr(err)
@@ -595,7 +593,7 @@ func (d *namespacedResourcesDeleter) deleteAllContent(ctx context.Context, ns *v
 		if numRemainingTotals.gvrToNumRemaining[podsGVR] > 0 {
 			logger.V(5).Info("Namespace controller - pods still remain, delaying deletion of other resources", "namespace", namespace)
 			if hasChanged := conditionUpdater.Update(ns); hasChanged {
-				if _, err = d.nsClient.UpdateStatus(ctx, ns, metav1.UpdateOptions{}); err != nil {
+				if _, err = d.nsClient.Cluster(logicalcluster.From(ns).Path()).UpdateStatus(ctx, ns, metav1.UpdateOptions{}); err != nil {
 					utilruntime.HandleError(fmt.Errorf("couldn't update status condition for namespace %q: %w", namespace, err))
 				}
 			}
