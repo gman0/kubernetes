@@ -18,10 +18,15 @@ package resourcequota
 
 import (
 	corev1listers "k8s.io/client-go/listers/core/v1"
+	cache "k8s.io/client-go/tools/cache"
 )
 
 // SetResourceQuotaLister sets the lister and indexer on the quotaAccessor. This is used by kcp to inject a lister and
 // indexer that are scoped to a single logical cluster. This replaces the need to use a.SetExternalKubeInformerFactory().
 func (a *QuotaAdmission) SetResourceQuotaLister(lister corev1listers.ResourceQuotaLister) {
 	a.quotaAccessor.lister = lister
+}
+
+func (a *QuotaAdmission) SetResourceQuotaInformer(informer cache.SharedIndexInformer) {
+	a.quotaAccessor.hasSynced = informer.HasSynced
 }
