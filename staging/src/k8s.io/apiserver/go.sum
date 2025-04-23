@@ -178,8 +178,10 @@ github.com/fsnotify/fsnotify v1.7.0/go.mod h1:40Bi/Hjc2AVfZrqy+aj+yEI+/bRxZnMJyT
 github.com/fxamacker/cbor/v2 v2.7.0 h1:iM5WgngdRBanHcxugY4JySA0nk1wZorNOpTgCMedv5E=
 github.com/fxamacker/cbor/v2 v2.7.0/go.mod h1:pxXPTn3joSm21Gbwsv0w9OSA2y1HFR9qXEeXQVeNoDQ=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
-github.com/gman0/kcp-client-go v0.0.0-20250418091538-395a6a497c3c h1:2dRNzXMOelMLhi8JRgQb/DA0ArC1vgtV9W9Mx+AyhZM=
-github.com/gman0/kcp-client-go v0.0.0-20250418091538-395a6a497c3c/go.mod h1:I29wpGSL3+rATARlRONsr5p8ckJGme8HaTjfKrfus0Y=
+github.com/gman0/kcp-apimachinery/v2 v2.0.0-20250423120233-ae02772e7ff5 h1:xAc7eMpvh5zcI7yHJmqxGVGa6H+fi1Q18UmLbQtimcE=
+github.com/gman0/kcp-apimachinery/v2 v2.0.0-20250423120233-ae02772e7ff5/go.mod h1:spnguzAdVVhSTCHMEfsZqhxWA0Yp/Bl1JctWBSMomFc=
+github.com/gman0/kcp-client-go v0.0.0-20250423130416-1e739ee35823 h1:PLBxNOgKKeNraT/gYzDIKGHOJWAjIUlhizPO2p+/bA8=
+github.com/gman0/kcp-client-go v0.0.0-20250423130416-1e739ee35823/go.mod h1:I29wpGSL3+rATARlRONsr5p8ckJGme8HaTjfKrfus0Y=
 github.com/go-kit/kit v0.9.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=
 github.com/go-kit/log v0.2.1/go.mod h1:NwTd00d/i8cPZ3xOwwiv2PO5MOcx78fFErGNcVmBjv0=
 github.com/go-logfmt/logfmt v0.4.0/go.mod h1:3RMwSq7FuexP4Kalkev3ejPJsZTpXXBr9+V4qmtdjCk=
@@ -255,8 +257,6 @@ github.com/jpillora/backoff v1.0.0/go.mod h1:J/6gKK9jxlEcS3zixgDgUAsiuZ7yrSoa/FX
 github.com/json-iterator/go v1.1.12 h1:PV8peI4a0ysnczrg+LtxykD8LfKY9ML6u2jnxaEnrnM=
 github.com/json-iterator/go v1.1.12/go.mod h1:e30LSqwooZae/UwlEbR2852Gd8hjQvJoHmT4TnhNGBo=
 github.com/julienschmidt/httprouter v1.3.0/go.mod h1:JR6WtHb+2LUe8TCKY3cZOxFyyO8IZAc4RVcycCCAKdM=
-github.com/kcp-dev/apimachinery/v2 v2.0.1-0.20250417112016-c9dbad5dea88 h1:EXB88dFIFQ01J/xnYfNX4ZrH51bnH41OIOFWiasMtZo=
-github.com/kcp-dev/apimachinery/v2 v2.0.1-0.20250417112016-c9dbad5dea88/go.mod h1:Cm9ERuEzDcVOeKauohBVzFGc1Wn4PLRspMXujw85q4U=
 github.com/kcp-dev/logicalcluster/v3 v3.0.5 h1:JbYakokb+5Uinz09oTXomSUJVQsqfxEvU4RyHUYxHOU=
 github.com/kcp-dev/logicalcluster/v3 v3.0.5/go.mod h1:EWBUBxdr49fUB1cLMO4nOdBWmYifLbP1LfoL20KkXYY=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=

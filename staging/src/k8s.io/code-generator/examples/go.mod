@@ -58,4 +58,6 @@ replace (
 	k8s.io/client-go => ../../client-go
 )
 
-replace github.com/kcp-dev/client-go => github.com/gman0/kcp-client-go v0.0.0-20250418091538-395a6a497c3c
+replace github.com/kcp-dev/client-go => github.com/gman0/kcp-client-go v0.0.0-20250423130416-1e739ee35823
+
+replace github.com/kcp-dev/apimachinery/v2 => github.com/gman0/kcp-apimachinery/v2 v2.0.0-20250423120233-ae02772e7ff5

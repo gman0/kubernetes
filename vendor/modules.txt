@@ -351,12 +351,12 @@ github.com/json-iterator/go
 # github.com/karrick/godirwalk v1.17.0
 ## explicit; go 1.13
 github.com/karrick/godirwalk
-# github.com/kcp-dev/apimachinery/v2 v2.0.1-0.20250417112016-c9dbad5dea88
+# github.com/kcp-dev/apimachinery/v2 v2.0.1-0.20250417112016-c9dbad5dea88 => github.com/gman0/kcp-apimachinery/v2 v2.0.0-20250423120233-ae02772e7ff5
 ## explicit; go 1.23.0
 github.com/kcp-dev/apimachinery/v2/pkg/cache
 github.com/kcp-dev/apimachinery/v2/pkg/client
 github.com/kcp-dev/apimachinery/v2/third_party/informers
-# github.com/kcp-dev/client-go v0.0.0-20250418091538-395a6a497c3c => github.com/gman0/kcp-client-go v0.0.0-20250418091538-395a6a497c3c
+# github.com/kcp-dev/client-go v0.0.0-20250423130416-1e739ee35823 => github.com/gman0/kcp-client-go v0.0.0-20250423130416-1e739ee35823
 ## explicit; go 1.23.0
 github.com/kcp-dev/client-go/apiextensions/client
 github.com/kcp-dev/client-go/apiextensions/client/typed/apiextensions/v1
@@ -1474,4 +1474,5 @@ sigs.k8s.io/structured-merge-diff/v4/value
 sigs.k8s.io/yaml
 sigs.k8s.io/yaml/goyaml.v2
 sigs.k8s.io/yaml/goyaml.v3
-# github.com/kcp-dev/client-go => github.com/gman0/kcp-client-go v0.0.0-20250418091538-395a6a497c3c
+# github.com/kcp-dev/apimachinery/v2 => github.com/gman0/kcp-apimachinery/v2 v2.0.0-20250423120233-ae02772e7ff5
+# github.com/kcp-dev/client-go => github.com/gman0/kcp-client-go v0.0.0-20250423130416-1e739ee35823

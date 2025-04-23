@@ -19,7 +19,7 @@ require (
 	github.com/google/gofuzz v1.2.0
 	github.com/google/uuid v1.6.0
 	github.com/kcp-dev/apimachinery/v2 v2.0.1-0.20250417112016-c9dbad5dea88
-	github.com/kcp-dev/client-go v0.0.0-20250418091538-395a6a497c3c
+	github.com/kcp-dev/client-go v0.0.0-20250423130416-1e739ee35823
 	github.com/kcp-dev/logicalcluster/v3 v3.0.5
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/pflag v1.0.5
@@ -135,7 +135,8 @@ require (
 )
 
 replace (
-	github.com/kcp-dev/client-go => github.com/gman0/kcp-client-go v0.0.0-20250418091538-395a6a497c3c
+	github.com/kcp-dev/apimachinery/v2 => github.com/gman0/kcp-apimachinery/v2 v2.0.0-20250423120233-ae02772e7ff5
+	github.com/kcp-dev/client-go => github.com/gman0/kcp-client-go v0.0.0-20250423130416-1e739ee35823
 	k8s.io/api => ../api
 	k8s.io/apimachinery => ../apimachinery
 	k8s.io/apiserver => ../apiserver

@@ -56,7 +56,7 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kcp-dev/apimachinery/v2 v2.0.1-0.20250417112016-c9dbad5dea88 // indirect
-	github.com/kcp-dev/client-go v0.0.0-20250418091538-395a6a497c3c // indirect
+	github.com/kcp-dev/client-go v0.0.0-20250423130416-1e739ee35823 // indirect
 	github.com/kcp-dev/logicalcluster/v3 v3.0.5 // indirect
 	github.com/klauspost/compress v1.17.11 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
@@ -117,7 +117,8 @@ require (
 )
 
 replace (
-	github.com/kcp-dev/client-go => github.com/gman0/kcp-client-go v0.0.0-20250418091538-395a6a497c3c
+	github.com/kcp-dev/apimachinery/v2 => github.com/gman0/kcp-apimachinery/v2 v2.0.0-20250423120233-ae02772e7ff5
+	github.com/kcp-dev/client-go => github.com/gman0/kcp-client-go v0.0.0-20250423130416-1e739ee35823
 	k8s.io/api => ../api
 	k8s.io/apiextensions-apiserver => ../apiextensions-apiserver
 	k8s.io/apimachinery => ../apimachinery
