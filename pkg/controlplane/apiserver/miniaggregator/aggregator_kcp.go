@@ -37,7 +37,6 @@ import (
 	genericapiserver "k8s.io/apiserver/pkg/server"
 	"k8s.io/kube-aggregator/pkg/controllers/openapi/aggregator"
 	"k8s.io/kube-openapi/pkg/handler"
-
 	controlplaneapiserver "k8s.io/kubernetes/pkg/controlplane/apiserver"
 )
 
@@ -97,6 +96,8 @@ type MiniAggregatorServer struct {
 	Apis *controlplaneapiserver.Server
 	// ApiExtensions is the server for API extensions.
 	ApiExtensions *apiextensionsapiserver.CustomResourceDefinitions
+
+	VirtualResources *genericapiserver.GenericAPIServer
 }
 
 // Complete fills in any fields not set that are required to have valid data.
@@ -120,6 +121,7 @@ func (c completedMiniAggregatorConfig) New(
 	delegationTarget genericapiserver.DelegationTarget,
 	apis *controlplaneapiserver.Server,
 	crds *apiextensionsapiserver.CustomResourceDefinitions,
+	vrs *genericapiserver.GenericAPIServer,
 ) (*MiniAggregatorServer, error) {
 	genericServer, err := c.GenericConfig.New("mini-aggregator", delegationTarget)
 	if err != nil {
@@ -130,6 +132,7 @@ func (c completedMiniAggregatorConfig) New(
 		GenericAPIServer: genericServer,
 		Apis:             apis,
 		ApiExtensions:    crds,
+		VirtualResources: vrs,
 	}
 
 	// Have to do this as a filter because of how the APIServerHandler.Director serves requests.
@@ -167,12 +170,18 @@ func (s *MiniAggregatorServer) filterAPIsRequest(req *restful.Request, resp *res
 		http.Error(resp.ResponseWriter, fmt.Sprintf("error retrieving custom resource discovery groups: %v", err), http.StatusInternalServerError)
 	}
 
+	vrGroups, err := s.VirtualResources.DiscoveryGroupManager.Groups(req.Request.Context(), req.Request)
+	if err != nil {
+		http.Error(resp.ResponseWriter, fmt.Sprintf("error retrieving virtual resource discovery groups: %v", err), http.StatusInternalServerError)
+	}
+
 	// Combine the slices using copy - more efficient than append
-	combined := make([]metav1.APIGroup, len(gcpGroups)+len(apiextensionsGroups)+len(crdGroups))
+	combined := make([]metav1.APIGroup, len(gcpGroups)+len(apiextensionsGroups)+len(crdGroups)+len(vrGroups))
 	var i int
 	i += copy(combined[i:], gcpGroups)
 	i += copy(combined[i:], apiextensionsGroups)
 	i += copy(combined[i:], crdGroups)
+	i += copy(combined[i:], vrGroups)
 
 	responsewriters.WriteObjectNegotiated(DiscoveryCodecs, negotiation.DefaultEndpointRestrictions, schema.GroupVersion{}, resp.ResponseWriter, req.Request, http.StatusOK, &metav1.APIGroupList{Groups: combined}, false)
 }
@@ -198,8 +207,10 @@ func (s *MiniAggregatorServer) serveOpenAPI(w http.ResponseWriter, req *http.Req
 	// Use withCluster here because each logical cluster can have a distinct set of APIs coming from its CRDs.
 	crdSpecs, _, _, err := downloader.Download(withCluster(s.ApiExtensions.GenericAPIServer.Handler.Director), "")
 
+	vrSpecs, _, _, err := downloader.Download(withCluster(s.VirtualResources.Handler.Director), "")
+
 	// TODO(ncdc): merging on the fly is expensive. We may need to optimize this (e.g. caching).
-	mergedSpecs, err := builder.MergeSpecs(controlPlaneSpec, crdSpecs)
+	mergedSpecs, err := builder.MergeSpecs(controlPlaneSpec, crdSpecs, vrSpecs)
 	if err != nil {
 		utilruntime.HandleError(err)
 	}
