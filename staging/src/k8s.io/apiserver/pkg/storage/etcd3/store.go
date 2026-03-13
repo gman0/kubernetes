@@ -879,7 +879,7 @@ func (s *store) GetList(ctx context.Context, key string, opts storage.ListOption
 
 			// kcp
 			clusterName := adjustClusterNameIfWildcard(shard, cluster, crdIndicator, keyPrefix, string(kv.Key))
-			shardName := adjustShardNameIfWildcard(shard, keyPrefix, string(kv.Key))
+			shardName := adjustShardNameIfWildcard(shard, cluster, crdIndicator, keyPrefix, string(kv.Key))
 			obj, err := s.decodeListItem(ctx, data, kv.ModRevision, s.codec, s.versioner, newItemFunc, clusterName, shardName)
 			if err != nil {
 				recordDecodeError(s.groupResource, string(kv.Key))

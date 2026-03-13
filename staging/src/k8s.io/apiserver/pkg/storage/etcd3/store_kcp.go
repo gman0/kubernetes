@@ -26,44 +26,94 @@ import (
 	"k8s.io/klog/v2"
 )
 
+func stripResourceOriginFromWildcardKey(keyWithoutPrefix string, crdRequest, partialMetadataRequest bool) string {
+	// Relationship between key prefix and key:
+	//
+	// When crdRequest=false:
+	//
+	//    Prefix when:                <Storage prefix> / <Group> / <Resource> / [ <Shard> / ] <Cluster> / [ <Namespace> / ] <Name>
+	//                                ^                                       ^           ^             ^
+	//       both shard and cluster   |                                       |           |             |
+	//       are wildcards:           +---------------------------------------+           |             |
+	//                                |                                                   |             |
+	//       only cluster is          |                                                   |             |
+	//       wildcard:                +---------------------------------------------------+             |
+	//                                |                                                                 |
+	//       none are wildcards:      +-----------------------------------------------------------------+
+	//
+	// When crdRequest=true:
+	//
+	//    CRD-based resources contain additional segment, <Identity or "customresources">.
+	//    This segment is NOT part of the prefix if partialMetadataRequest=true so that
+	//    resources of the same GR can be matched regardless of their identity or CRD origin.
+	//
+	//    Prefix when:                      <Storage prefix> / <Group> / <Resource> / <Identity or "customresources"> / [ <Shard> / ] <Cluster> / [ <Namespace> / ] <Name>
+	//                                      ^                                       ^                                 ^
+	//       partialMetadataRequest=true,   |                                       |                                 |
+	//       shard&cluster are wildcards:   +---------------------------------------+                                 |
+	//                                      |                                                                         |
+	//       partialMetadataRequest=false,  |                                                                         |
+	//       shard&cluster are wildcards:   +-------------------------------------------------------------------------+
+	//
+	//       N.B. non-wildcard cases with partialMetadataRequest=false
+	//       behave the same as with crdRequest=false.
+	//
+	// In case of `partialMetadataRequest==true && crdRequest==true`,
+	// the <Identity or "customresources"> segment is still part
+	// of the keyWithoutPrefix. It must be stripped, so that shard
+	// and cluster names can be parsed out correctly.
+
+	if !crdRequest || !partialMetadataRequest {
+		// Don't need to do anything: the prefix already contains the origin,
+		// and that already has been stripped off in keyWithoutPrefix.
+		return keyWithoutPrefix
+	}
+
+	// We need to drop the first segment (the <Identity or "customresources">) off the keyWithoutPrefix.
+
+	segmentStart := strings.IndexByte(keyWithoutPrefix, '/')
+	if segmentStart < 0 {
+		return keyWithoutPrefix
+	}
+	if segmentStart == len(keyWithoutPrefix) {
+		return keyWithoutPrefix
+	}
+	return keyWithoutPrefix[segmentStart+1:]
+}
+
 // adjustClusterNameIfWildcard determines the logical cluster name. If this is not a cluster-wildcard list/watch request,
-// the cluster name is returned unmodified. Otherwise, the cluster name is extracted from the key based on whether it is
-// - a shard-wildcard request: <prefix>/shardName/clusterName/<remainder>
-// - CR partial metadata request: <prefix>/identity/clusterName/<remainder>
-// - any other request: <prefix>/clusterName/<remainder>.
+// the cluster name is returned unmodified. Otherwise, the cluster name is extracted from the storage key.
 func adjustClusterNameIfWildcard(shard genericapirequest.Shard, cluster *genericapirequest.Cluster, crdRequest bool, keyPrefix, key string) logicalcluster.Name {
 	if !cluster.Wildcard {
 		return cluster.Name
 	}
 
 	keyWithoutPrefix := strings.TrimPrefix(key, keyPrefix)
-	parts := strings.SplitN(keyWithoutPrefix, "/", 3)
+	keyWithoutOrigin := stripResourceOriginFromWildcardKey(keyWithoutPrefix, crdRequest, cluster.PartialMetadataRequest)
+
+	// The remaining key is in format:
+	//   [ <Shard> ] / <Cluster> / <Remainder...>
+	parts := strings.SplitN(keyWithoutOrigin, "/", 3)
 
 	extract := func(minLen, i int) logicalcluster.Name {
 		if len(parts) < minLen {
-			klog.Warningf("shard=%s cluster=%s invalid key=%s had %d parts, not %d", shard, cluster, keyWithoutPrefix, len(parts), minLen)
+			klog.Warningf("shard=%s cluster=%v invalid key=%s had %d parts, wanted %d", shard, cluster, keyWithoutOrigin, len(parts), minLen)
 			return ""
 		}
 		return logicalcluster.Name(parts[i])
 	}
 
-	switch {
-	case cluster.PartialMetadataRequest && crdRequest:
-		// expecting 2699f4d273d342adccdc8a32663408226ecf66de7d191113ed3d4dc9bccec2f2/root:org:ws/<remainder>
-		// OR customresources/root:org:ws/<remainder>
-		return extract(3, 1)
-	case shard.Wildcard():
-		// expecting shardName/clusterName/<remainder>
-		return extract(3, 1)
-	default:
-		// expecting root:org:ws/<remainder>
+	if shard.Empty() {
+		// It's only <Cluster> / <Remainder...>
 		return extract(2, 0)
 	}
+	// It's <Shard> / <Cluster> / <Remainder...>
+	return extract(3, 1)
 }
 
 // adjustShardNameIfWildcard determines a shard name. If this is not a shard-wildcard request,
 // the shard name is returned unmodified. Otherwise, the shard name is extracted from the storage key.
-func adjustShardNameIfWildcard(shard genericapirequest.Shard, keyPrefix, key string) genericapirequest.Shard {
+func adjustShardNameIfWildcard(shard genericapirequest.Shard, cluster *genericapirequest.Cluster, crdRequest bool, keyPrefix, key string) genericapirequest.Shard {
 	if !shard.Empty() && !shard.Wildcard() {
 		return shard
 	}
@@ -75,9 +125,13 @@ func adjustShardNameIfWildcard(shard genericapirequest.Shard, keyPrefix, key str
 	}
 
 	keyWithoutPrefix := strings.TrimPrefix(key, keyPrefix)
-	parts := strings.SplitN(keyWithoutPrefix, "/", 3)
+	keyWithoutOrigin := stripResourceOriginFromWildcardKey(keyWithoutPrefix, crdRequest, cluster.PartialMetadataRequest)
+
+	// The remaining key is in format:
+	//   <Shard> / <Cluster> / <Remainder...>
+	parts := strings.SplitN(keyWithoutOrigin, "/", 3)
 	if len(parts) < 3 {
-		klog.Warningf("unable to extract a shard name, invalid key=%s had %d parts, not %d", keyWithoutPrefix, len(parts), 3)
+		klog.Warningf("unable to extract a shard name, invalid key=%s had %d parts, wanted %d", keyWithoutOrigin, len(parts), 3)
 		return ""
 	}
 	return genericapirequest.Shard(parts[0])
