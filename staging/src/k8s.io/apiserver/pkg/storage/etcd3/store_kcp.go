@@ -31,7 +31,7 @@ func stripResourceOriginFromWildcardKey(keyWithoutPrefix string, crdRequest, par
 	//
 	// When crdRequest=false:
 	//
-	//    Prefix if:                  <Storage prefix> / <Group> / <Resource> / [ <Shard> / ] <Cluster> / [ <Namespace> / ] <Name>
+	//    Prefix when:                <Storage prefix> / <Group> / <Resource> / [ <Shard> / ] <Cluster> / [ <Namespace> / ] <Name>
 	//                                ^                                       ^           ^             ^
 	//       both shard and cluster   |                                       |           |             |
 	//       are wildcards:           +---------------------------------------+           |             |
@@ -51,7 +51,7 @@ func stripResourceOriginFromWildcardKey(keyWithoutPrefix string, crdRequest, par
 	//      shard and cluster wildcards:    +-------------------------------------------------------------------------+
 	//                                      |                                                                         |
 	//                                      V                                                                         V
-	//    Prefix if:                        <Storage prefix> / <Group> / <Resource> / <Identity or "customresources"> / [ <Shard> / ] <Cluster> / [ <Namespace> / ] <Name>
+	//    Prefix when:                      <Storage prefix> / <Group> / <Resource> / <Identity or "customresources"> / [ <Shard> / ] <Cluster> / [ <Namespace> / ] <Name>
 	//                                      ^                                       ^
 	//       partialMetadataRequest=true,   |                                       |
 	//       shard and cluster wildcards:   +---------------------------------------+
@@ -68,7 +68,7 @@ func stripResourceOriginFromWildcardKey(keyWithoutPrefix string, crdRequest, par
 		return keyWithoutPrefix
 	}
 
-	// Still need to drop the first segment off the keyWithoutPrefix.
+	// We need to drop the first segment (the <Identity or "customresources">) off the keyWithoutPrefix.
 
 	segmentStart := strings.IndexByte(keyWithoutPrefix, '/')
 	if segmentStart < 0 {
@@ -96,7 +96,7 @@ func adjustClusterNameIfWildcard(shard genericapirequest.Shard, cluster *generic
 
 	extract := func(minLen, i int) logicalcluster.Name {
 		if len(parts) < minLen {
-			log.Printf("shard=%s cluster=%s invalid key=%s had %d parts, wanted %d", shard, cluster.Name, keyWithoutOrigin, len(parts), minLen)
+			klog.Warningf("shard=%s cluster=%s invalid key=%s had %d parts, wanted %d", shard, cluster.Name, keyWithoutOrigin, len(parts), minLen)
 			return ""
 		}
 		return logicalcluster.Name(parts[i])
@@ -130,7 +130,7 @@ func adjustShardNameIfWildcard(shard genericapirequest.Shard, cluster *genericap
 	//   <Shard> / <Cluster> / <Remainder...>
 	parts := strings.SplitN(keyWithoutOrigin, "/", 3)
 	if len(parts) < 3 {
-		log.Printf("unable to extract a shard name, invalid key=%s had %d parts, wanted %d", keyWithoutOrigin, len(parts), 3)
+		klog.Warningf("unable to extract a shard name, invalid key=%s had %d parts, wanted %d", keyWithoutOrigin, len(parts), 3)
 		return ""
 	}
 	return genericapirequest.Shard(parts[0])
