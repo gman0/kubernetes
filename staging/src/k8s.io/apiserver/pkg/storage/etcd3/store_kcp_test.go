@@ -84,18 +84,14 @@ func TestAdjustClusterNameIfWildcardWithShardSupport(t *testing.T) {
 		keyPrefix           string
 		expectedClusterName string
 	}{
-		"not wildcard": {
+
+		// Built-in types.
+
+		"not wildcard, built-in type": {
 			cluster:             genericapirequest.Cluster{Name: logicalcluster.Name("root:org:ws")},
 			shard:               "amber",
 			key:                 "/registry/core/configmaps/amber/root:org:ws/somename",
-			keyPrefix:           "/registry/core/configmaps/",
-			expectedClusterName: "root:org:ws",
-		},
-		"both wildcard": {
-			cluster:             genericapirequest.Cluster{Wildcard: true},
-			shard:               "*",
-			key:                 "/registry/core/configmaps/amber/root:org:ws/somename",
-			keyPrefix:           "/registry/core/configmaps/",
+			keyPrefix:           "/registry/core/configmaps/amber/root:org:ws/",
 			expectedClusterName: "root:org:ws",
 		},
 		"both wildcard, built-in type": {
@@ -105,11 +101,25 @@ func TestAdjustClusterNameIfWildcardWithShardSupport(t *testing.T) {
 			keyPrefix:           "/registry/core/configmaps/",
 			expectedClusterName: "root:org:ws",
 		},
+		"both wildcard, built-in type, partial": {
+			cluster:             genericapirequest.Cluster{Wildcard: true, PartialMetadataRequest: true},
+			shard:               "*",
+			key:                 "/registry/core/configmaps/amber/root:org:ws/somename",
+			keyPrefix:           "/registry/core/configmaps/",
+			expectedClusterName: "root:org:ws",
+		},
 		"only cluster wildcard, built-in type": {
 			cluster:             genericapirequest.Cluster{Wildcard: true},
 			shard:               "amber",
 			key:                 "/registry/core/configmaps/amber/root:org:ws/somename",
-			keyPrefix:           "/registry/core/configmaps/",
+			keyPrefix:           "/registry/core/configmaps/amber/",
+			expectedClusterName: "root:org:ws",
+		},
+		"only cluster wildcard, built-in type, partial": {
+			cluster:             genericapirequest.Cluster{Wildcard: true, PartialMetadataRequest: true},
+			shard:               "amber",
+			key:                 "/registry/core/configmaps/amber/root:org:ws/somename",
+			keyPrefix:           "/registry/core/configmaps/amber/",
 			expectedClusterName: "root:org:ws",
 		},
 		"only shard wildcard, built-in type": {
@@ -119,38 +129,9 @@ func TestAdjustClusterNameIfWildcardWithShardSupport(t *testing.T) {
 			keyPrefix:           "/registry/core/configmaps",
 			expectedClusterName: "root:org:ws",
 		},
-		"only cluster wildcard, CRD": {
-			cluster:             genericapirequest.Cluster{Wildcard: true},
-			shard:               "amber",
-			crdRequest:          true,
-			key:                 "/registry/group/resource/identity/amber/root:org:ws/somename",
-			keyPrefix:           "/registry/group/resource/identity/",
-			expectedClusterName: "root:org:ws",
-		},
-		"only cluster wildcard, CRD, partial metadata": {
-			cluster:             genericapirequest.Cluster{Wildcard: true, PartialMetadataRequest: true},
-			shard:               "amber",
-			crdRequest:          true,
-			key:                 "/registry/group/resource/identity/amber/root:org:ws/somename",
-			keyPrefix:           "/registry/group/resource/",
-			expectedClusterName: "root:org:ws",
-		},
-		"only shard wildcard, CRD": {
-			cluster:             genericapirequest.Cluster{Wildcard: true},
-			shard:               "*",
-			crdRequest:          true,
-			key:                 "/registry/group/resource/identity/amber/root:org:ws/somename",
-			keyPrefix:           "/registry/group/resource/identity/",
-			expectedClusterName: "root:org:ws",
-		},
-		"only shard wildcard, CRD, partial metadata": {
-			cluster:             genericapirequest.Cluster{Wildcard: true, PartialMetadataRequest: true},
-			shard:               "*",
-			crdRequest:          true,
-			key:                 "/registry/group/resource/identity/amber/root:org:ws/somename",
-			keyPrefix:           "/registry/group/resource/",
-			expectedClusterName: "root:org:ws",
-		},
+
+		// CRD types.
+
 		"both wildcard, CRD": {
 			cluster:             genericapirequest.Cluster{Wildcard: true},
 			shard:               "*",
@@ -165,6 +146,32 @@ func TestAdjustClusterNameIfWildcardWithShardSupport(t *testing.T) {
 			crdRequest:          true,
 			key:                 "/registry/group/resource/identity/amber/root:org:ws/somename",
 			keyPrefix:           "/registry/group/resource/",
+			expectedClusterName: "root:org:ws",
+		},
+
+		"only cluster wildcard, CRD": {
+			cluster:             genericapirequest.Cluster{Wildcard: true},
+			shard:               "amber",
+			crdRequest:          true,
+			key:                 "/registry/group/resource/identity/amber/root:org:ws/somename",
+			keyPrefix:           "/registry/group/resource/identity/amber/",
+			expectedClusterName: "root:org:ws",
+		},
+		"only cluster wildcard, CRD, partial metadata": {
+			cluster:             genericapirequest.Cluster{Wildcard: true, PartialMetadataRequest: true},
+			shard:               "amber",
+			crdRequest:          true,
+			key:                 "/registry/group/resource/identity/amber/root:org:ws/somename",
+			keyPrefix:           "/registry/group/resource/",
+			expectedClusterName: "root:org:ws",
+		},
+
+		"only shard wildcard, CRD": {
+			cluster:             genericapirequest.Cluster{Name: logicalcluster.Name("root:org:ws")},
+			shard:               "*",
+			crdRequest:          true,
+			key:                 "/registry/group/resource/identity/amber/root:org:ws/somename",
+			keyPrefix:           "/registry/group/resource/identity/",
 			expectedClusterName: "root:org:ws",
 		},
 	}
@@ -188,6 +195,9 @@ func TestAdjustShardNameIfWildcard(t *testing.T) {
 		keyPrefix     string
 		expectedShard genericapirequest.Shard
 	}{
+
+		// Built-in types.
+
 		"not wildcard, built-in type": {
 			cluster:       genericapirequest.Cluster{Name: logicalcluster.Name("root:org:ws")},
 			shard:         "amber",
@@ -216,6 +226,9 @@ func TestAdjustShardNameIfWildcard(t *testing.T) {
 			keyPrefix:     "/registry/group/resource/",
 			expectedShard: "amber",
 		},
+
+		// CRD types.
+
 		"not wildcard, CRD": {
 			crdRequest:    true,
 			cluster:       genericapirequest.Cluster{Name: logicalcluster.Name("root:org:ws")},
@@ -224,6 +237,7 @@ func TestAdjustShardNameIfWildcard(t *testing.T) {
 			keyPrefix:     "/registry/group/resource/identity/amber/root:org:ws/",
 			expectedShard: "amber",
 		},
+
 		"both wildcard, CRD": {
 			crdRequest:    true,
 			cluster:       genericapirequest.Cluster{Wildcard: true},
@@ -240,12 +254,30 @@ func TestAdjustShardNameIfWildcard(t *testing.T) {
 			keyPrefix:     "/registry/group/resource/",
 			expectedShard: "amber",
 		},
+
+		"only cluster wildcard, CRD": {
+			cluster:       genericapirequest.Cluster{Wildcard: true},
+			shard:         "amber",
+			crdRequest:    true,
+			key:           "/registry/group/resource/identity/amber/root:org:ws/somename",
+			keyPrefix:     "/registry/group/resource/",
+			expectedShard: "amber",
+		},
 		"only cluster wildcard, CRD, partial metadata request": {
 			cluster:       genericapirequest.Cluster{Wildcard: true, PartialMetadataRequest: true},
 			shard:         "amber",
 			crdRequest:    true,
 			key:           "/registry/group/resource/identity/amber/root:org:ws/somename",
 			keyPrefix:     "/registry/group/resource/",
+			expectedShard: "amber",
+		},
+
+		"only shard wildcard, CRD": {
+			cluster:       genericapirequest.Cluster{Name: logicalcluster.Name("root:org:ws")},
+			shard:         "*",
+			crdRequest:    true,
+			key:           "/registry/group/resource/identity/amber/root:org:ws/somename",
+			keyPrefix:     "/registry/group/resource/identity/",
 			expectedShard: "amber",
 		},
 	}
